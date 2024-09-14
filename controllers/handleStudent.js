@@ -8,11 +8,27 @@ async function fetch_student(req, res) {
     if (type == "name") {
       const student = await Student.findOne({ where: { name: query } });
       if (!student) return res.staus("404").json({ error: "Nothing Found!" });
-      return res.status(200).json(student);
+      const filteredStudent = {
+        sr_no: student.sr_no,
+        name: student.name,
+        father: student.father,
+        program: student.program,
+        admission: student.admission,
+      };
+
+      return res.status(200).json(filteredStudent);
     } else if (type == "admission") {
       const student = await Student.findOne({ where: { admission: query } });
       if (!student) return res.staus("404").json({ error: "Nothing Found!" });
-      return res.status(200).json(student);
+      const filteredStudent = {
+        sr_no: student.sr_no,
+        name: student.name,
+        father: student.father,
+        program: student.program,
+        admission: student.admission,
+      };
+
+      return res.status(200).json(filteredStudent);
     } else {
       return res.status(404).json({ error: "Nothing Found!!" });
     }
