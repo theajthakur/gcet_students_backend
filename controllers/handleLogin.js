@@ -11,11 +11,28 @@ async function handleLogin(req, res) {
       message: "All arguments are required!",
     });
   const student = await Student.findOne({
-    where: { name: name, father: father, admission: adm_no },
+    where: { admission: adm_no },
   });
   if (!student)
     return res.json({ status: "error", message: "Invalid Details!" });
 
+  if (student.name.toUpperCase() != name.toUpperCase())
+    return res.status(400).json({
+      status: "error",
+      message: "name not matching with corresponding Admission Number",
+    });
+
+  if (student.name.toUpperCase() != name.toUpperCase())
+    return res.status(400).json({
+      status: "error",
+      message: "Name not matching with corresponding Admission Number",
+    });
+
+  if (student.father.toUpperCase() != father.toUpperCase())
+    return res.status(400).json({
+      status: "error",
+      message: "Father Name not matching with corresponding Admission Number",
+    });
   const token = jwt.sign({ student }, jwt_sign);
   return res.json({ token: token });
 }
