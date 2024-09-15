@@ -4,10 +4,11 @@ const cors = require("cors");
 const app = express();
 const cookieParser = require("cookie-parser");
 const port = 8000;
-
+const auth = require("./middlewares/auth");
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
+app.use(auth);
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
@@ -15,8 +16,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const data_router = require("./routers/data_static");
+const auth_router = require("./routers/auth");
 
 app.use("/student", data_router);
+app.use("/", auth_router);
 app.listen(port, () => {
   console.log(`Server Started on ${port}`);
 });
