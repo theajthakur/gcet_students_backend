@@ -33,7 +33,14 @@ async function handleLogin(req, res) {
       status: "error",
       message: "Father Name not matching with corresponding Admission Number",
     });
-  const token = jwt.sign({ student }, jwt_sign);
+
+  const student_client = {
+    sr_no: student.sr_no,
+    name: student.name,
+    father: student.father,
+    admission: student.admission,
+  };
+  const token = jwt.sign(student_client, jwt_sign);
   return res.json({ token: token });
 }
 
