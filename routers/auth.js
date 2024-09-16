@@ -7,7 +7,6 @@ require("dotenv").config();
 router.post("/login", handleLogin);
 router.get("/checklogin", (req, res) => {
   const token = req.header("Authorization");
-  console.log(token);
   if (!token)
     return res.status(401).json({ status: "error", message: "unauthorised" });
 
