@@ -4,7 +4,12 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 // Middleware to authenticate JWT
 function authenticateToken(req, res, next) {
-  if (req.path === "/login" || req.path === "/public") return next();
+  if (
+    req.path === "/login" ||
+    req.path === "/public" ||
+    req.path === "/checklogin"
+  )
+    return next();
 
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
