@@ -9,11 +9,13 @@ async function fetch_student(req, res) {
       const student = await Student.findOne({ where: { name: query } });
       if (!student) return res.staus("404").json({ error: "Nothing Found!" });
       const filteredStudent = {
-        sr_no: student.sr_no,
+        sr_no: student.class_sr,
         name: student.name,
-        father: student.father,
-        program: student.program,
-        admission: student.admission,
+        father: student.father_name,
+        branch: student.brach,
+        section: student.section,
+        admission: student.adm_no,
+        roll_no: student.adm_no,
       };
 
       return res.status(200).json(filteredStudent);
