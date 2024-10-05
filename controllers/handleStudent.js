@@ -47,4 +47,9 @@ async function fetch_student(req, res) {
   }
 }
 
-module.exports = { fetch_student };
+async function student_profile(req, res) {
+  const id = req.params.id;
+  const student = await Student.findOne({ where: { sr_no: id } });
+  res.json(student);
+}
+module.exports = { fetch_student, student_profile };
