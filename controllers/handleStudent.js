@@ -15,7 +15,7 @@ async function fetch_student(req, res) {
         branch: student.brach,
         section: student.section,
         admission: student.adm_no,
-        roll_no: student.adm_no,
+        roll_no: student.tmp_roll,
       };
 
       return res.status(200).json(filteredStudent);
