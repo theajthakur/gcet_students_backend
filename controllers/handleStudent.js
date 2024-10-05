@@ -12,7 +12,7 @@ async function fetch_student(req, res) {
         sr_no: student.class_sr,
         name: student.name,
         father: student.father_name,
-        branch: student.brach,
+        branch: student.branch,
         section: student.section,
         admission: student.adm_no,
         roll_no: student.tmp_roll,
