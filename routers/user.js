@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { showProfile, updateProfile } = require("../controllers/handleUser");
+const { showProfile, updateProfile } = require("../controllers/user");
 require("dotenv").config();
 
 // Router for Logged in User at /user
