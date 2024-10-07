@@ -52,4 +52,17 @@ async function handleLogin(req, res) {
   return res.json({ token: token });
 }
 
-module.exports = { handleLogin };
+async function checkLogin(req, res) {
+  const token = req.header("Authorization");
+  if (!token)
+    return res.status(401).json({ status: "error", message: "unauthorised" });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.json({ status: "error", message: err });
+    return res.json({
+      status: "success",
+      message: `${user.name} is verified!`,
+    });
+  });
+}
+module.exports = { handleLogin, checkLogin };
