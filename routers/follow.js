@@ -7,8 +7,8 @@ const {
 } = require("../controllers/follow");
 require("dotenv").config();
 
-router.post("/request/:id", handleRequest);
+router.post("/request", handleRequest);
 router.post("/accept/:id", handleAccept);
-router.post("/remove/:id", handleRemove);
+router.post("/remove/", handleRemove);
 
 module.exports = router;
