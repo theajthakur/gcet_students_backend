@@ -1,4 +1,5 @@
 const Student = require("../models/Students");
+const Follow = require("../models/follow");
 const { Op } = require("sequelize");
 
 async function fetch_student(req, res) {
@@ -49,7 +50,38 @@ async function fetch_student(req, res) {
 
 async function student_profile(req, res) {
   const id = req.params.id;
-  const student = await Student.findOne({ where: { sr_no: id } });
-  res.json(student);
+
+  try {
+    // Fetch the student's profile based on the provided ID
+    const student = await Student.findOne({ where: { sr_no: id } });
+
+    // If the student does not exist, return a 404 error
+    if (!student) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Student not found." });
+    }
+
+    // Check if the current user is following the student
+    const followS = await Follow.findOne({
+      where: { followerId: req.user.sr_no, followingId: id },
+    });
+
+    // Create a new object that includes the student's data and follow status
+    const response = {
+      ...student.dataValues, // Use dataValues to get plain object representation
+      follow: !!followS, // Set follow to true if the user follows the student
+    };
+
+    // Return the response with follow status
+    return res.json({ success: true, student: response });
+  } catch (error) {
+    console.error("Error fetching student profile:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Something went wrong. Please try again later.",
+    });
+  }
 }
+
 module.exports = { fetch_student, student_profile };
