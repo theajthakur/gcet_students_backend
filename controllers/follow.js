@@ -21,9 +21,11 @@ async function handleRequest(req, res) {
     });
 
     if (existingRequest) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Follow request already exists" });
+      let message = `Follow request to ${secondUser.name} already exists`;
+      if (existingRequest.status) {
+        message = `You already follow ${secondUser.name}`;
+      }
+      return res.status(400).json({ success: false, error: message });
     }
 
     await Follow.create({ followerId: follower, followingId: following });
