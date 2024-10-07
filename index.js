@@ -25,10 +25,12 @@ app.use(cookieParser());
 const data_router = require("./routers/data_static");
 const auth_router = require("./routers/auth");
 const user_router = require("./routers/user");
+const follow_router = require("./routers/follow");
 
 app.use("/student", data_router);
 app.use("/", auth_router);
 app.use("/user", user_router);
+app.use("/follow", follow_router);
 
 app.listen(port, () => {
   console.log(`Server Started on ${port}`);
