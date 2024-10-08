@@ -67,10 +67,16 @@ async function student_profile(req, res) {
       where: { followerId: req.user.sr_no, followingId: id },
     });
 
+    let followSs = "nofollow";
+    if (followS) {
+      followSs = followS.status ? "follow" : "requested";
+    }
+
     // Create a new object that includes the student's data and follow status
     const response = {
       ...student.dataValues, // Use dataValues to get plain object representation
-      follow: !!followS, // Set follow to true if the user follows the student
+      follow: followSs, // Set follow to true if the user follows the student
+      self: parseInt(req.user.sr_no) === parseInt(id),
     };
 
     // Return the response with follow status

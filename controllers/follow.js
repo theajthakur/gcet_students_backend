@@ -79,7 +79,9 @@ async function handleRemove(req, res) {
 
     return res.status(200).json({
       success: true,
-      message: `Unfollowed Successfully!`,
+      message: existingFollow.status
+        ? "Unfollowed successfully!"
+        : "Follow Request Deleted!",
     });
   } catch (error) {
     console.error("Error during unfollowing:", error); // Log the error for debugging
