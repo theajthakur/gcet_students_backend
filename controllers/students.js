@@ -77,6 +77,7 @@ async function student_profile(req, res) {
       ...student.dataValues, // Use dataValues to get plain object representation
       follow: followSs, // Set follow to true if the user follows the student
       self: parseInt(req.user.sr_no) === parseInt(id),
+      verified: student.mobile && student.email ? true : false,
     };
 
     // Return the response with follow status
