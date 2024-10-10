@@ -50,14 +50,39 @@ async function handleRequest(req, res) {
 }
 
 async function handleAccept(req, res) {
-  const reqId = parseInt(req.params.id);
-  const user = req.user;
-  const followRequest = await Follow.findOne({
-    where: { id: reqId, followerId: user.sr_no, status: 0 },
-  });
-  if (!followRequest) return res.json({ error: "No such request Exists!" });
-  await Follow.update({ status: 1 }, { where: { id: reqId } });
-  res.json({ status: "succes", message: "Request Accepted Successfully!" });
+  try {
+    const reqId = parseInt(req.params.id);
+    const user = req.user;
+    const followRequest = await Follow.findOne({
+      where: { id: reqId, followerId: user.sr_no, status: 0 },
+    });
+
+    if (!followRequest) {
+      return res.status(404).json({ error: "No such follow request exists!" });
+    }
+
+    const [updated] = await Follow.update(
+      { status: 1 },
+      { where: { id: reqId } }
+    );
+
+    if (updated) {
+      return res
+        .status(200)
+        .json({ status: "success", message: "Request accepted successfully!" });
+    } else {
+      return res.status(500).json({
+        status: "error",
+        message: "Failed to accept the request. Please try again.",
+      });
+    }
+  } catch (error) {
+    console.error("Error while accepting follow request:", error);
+    res.status(500).json({
+      status: "error",
+      message: "An error occurred while processing your request.",
+    });
+  }
 }
 async function handleRemove(req, res) {
   const user = req.user;
