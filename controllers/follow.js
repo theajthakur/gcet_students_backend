@@ -134,7 +134,7 @@ async function listRequests(req, res) {
       {
         model: Student,
         as: "follower",
-        attributes: ["name"],
+        attributes: ["name", "profile_pic"],
       },
     ],
   });
