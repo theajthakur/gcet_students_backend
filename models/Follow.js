@@ -37,8 +37,9 @@ const Follow = sequelize.define(
   }
 );
 
-// Establish relationships (optional, for easier querying)
 Student.hasMany(Follow, { foreignKey: "followerId", as: "Following" });
 Student.hasMany(Follow, { foreignKey: "followingId", as: "Followers" });
+Follow.belongsTo(Student, { foreignKey: "followerId", as: "follower" });
+Follow.belongsTo(Student, { foreignKey: "followingId", as: "following" });
 
 module.exports = Follow;

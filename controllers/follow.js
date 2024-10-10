@@ -54,7 +54,7 @@ async function handleAccept(req, res) {
     const reqId = parseInt(req.params.id);
     const user = req.user;
     const followRequest = await Follow.findOne({
-      where: { id: reqId, followerId: user.sr_no, status: 0 },
+      where: { id: reqId, followingId: user.sr_no, status: 0 },
     });
 
     if (!followRequest) {
@@ -126,4 +126,21 @@ async function handleRemove(req, res) {
   }
 }
 
-module.exports = { handleAccept, handleRemove, handleRequest };
+async function listRequests(req, res) {
+  const user = req.user;
+  const requests = await Follow.findAll({
+    where: { followingId: user.sr_no, status: 0 },
+    include: [
+      {
+        model: Student,
+        as: "follower",
+        attributes: ["name"],
+      },
+    ],
+  });
+
+  if (!requests) return res.json({ error: "No Pending Request!" });
+  return res.json(requests);
+}
+
+module.exports = { handleAccept, handleRemove, handleRequest, listRequests };
