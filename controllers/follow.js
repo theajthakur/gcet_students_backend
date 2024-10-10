@@ -49,7 +49,12 @@ async function handleRequest(req, res) {
   }
 }
 
-async function handleAccept(req, res) {
+async function handleRequestManage(req, res) {
+  const type = req.params.type;
+  const allowedtypes = ["accept", "decline"];
+  let performed = false;
+  if (!allowedtypes.includes(type))
+    return res.status(400).json({ error: "Invalid Method!" });
   try {
     const reqId = parseInt(req.params.id);
     const user = req.user;
@@ -60,13 +65,21 @@ async function handleAccept(req, res) {
     if (!followRequest) {
       return res.status(404).json({ error: "No such follow request exists!" });
     }
+    var typeMsg = "";
+    if (type == "accept") {
+      performed = true;
+      const [updated] = await Follow.update(
+        { status: 1 },
+        { where: { id: reqId } }
+      );
+      typeMsg = "Request accepted successfully!";
+    } else if (type == "decline") {
+      performed = true;
+      await Follow.destroy({ where: { id: reqId } });
+      typeMsg = "Request Removed successfully!";
+    }
 
-    const [updated] = await Follow.update(
-      { status: 1 },
-      { where: { id: reqId } }
-    );
-
-    if (updated) {
+    if (performed) {
       const remainingRequests = await Follow.findAll({
         where: { followingId: user.sr_no, status: 0 },
         include: [
@@ -79,17 +92,17 @@ async function handleAccept(req, res) {
       });
       return res.status(200).json({
         status: "success",
-        message: "Request accepted successfully!",
+        message: typeMsg,
         remainingRequests: remainingRequests,
       });
     } else {
       return res.status(500).json({
         status: "error",
-        message: "Failed to accept the request. Please try again.",
+        message: `Failed to ${type} the request. Please try again.`,
       });
     }
   } catch (error) {
-    console.error("Error while accepting follow request:", error);
+    console.error(`Error while ${type} follow request:`, error);
     res.status(500).json({
       status: "error",
       message: "An error occurred while processing your request.",
@@ -155,4 +168,9 @@ async function listRequests(req, res) {
   return res.json(requests);
 }
 
-module.exports = { handleAccept, handleRemove, handleRequest, listRequests };
+module.exports = {
+  handleRequestManage,
+  handleRemove,
+  handleRequest,
+  listRequests,
+};
