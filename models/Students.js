@@ -5,54 +5,54 @@ const Student = sequelize.define(
   "Student",
   {
     sr_no: {
-      type: DataTypes.INTEGER, // Match the database type
+      type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true, // Set as primary key
-      unique: true, // Ensure it is unique
+      primaryKey: true,
+      unique: true,
     },
     branch_sr: {
-      type: DataTypes.INTEGER, // Match the database type
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     class_sr: {
-      type: DataTypes.INTEGER, // Match the database type
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     branch: {
-      type: DataTypes.STRING(10), // Match the database type
+      type: DataTypes.STRING(10),
       allowNull: true,
     },
     section: {
-      type: DataTypes.STRING(10), // Match the database type
+      type: DataTypes.STRING(10),
       allowNull: true,
     },
     tmp_roll: {
-      type: DataTypes.STRING(20), // Match the database type
+      type: DataTypes.STRING(20),
       allowNull: true,
     },
     adm_no: {
-      type: DataTypes.STRING(20), // Match the database type
+      type: DataTypes.STRING(20),
       allowNull: true,
     },
     name: {
-      type: DataTypes.STRING(100), // Match the database type
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     father_name: {
-      type: DataTypes.STRING(100), // Match the database type
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     profile_pic: {
-      type: DataTypes.STRING(100), // Match the database type
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     email: {
-      type: DataTypes.STRING(100), // Match the database type
+      type: DataTypes.STRING(100),
       allowNull: true,
-      unique: true, // Optional: Add if you want to enforce unique email addresses
+      unique: true,
     },
     mobile: {
-      type: DataTypes.STRING(100), // Use STRING to accommodate different formats
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
   },
