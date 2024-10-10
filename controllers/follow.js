@@ -67,9 +67,21 @@ async function handleAccept(req, res) {
     );
 
     if (updated) {
-      return res
-        .status(200)
-        .json({ status: "success", message: "Request accepted successfully!" });
+      const remainingRequests = await Follow.findAll({
+        where: { followingId: user.sr_no, status: 0 },
+        include: [
+          {
+            model: Student,
+            as: "follower",
+            attributes: ["name", "profile_pic"],
+          },
+        ],
+      });
+      return res.status(200).json({
+        status: "success",
+        message: "Request accepted successfully!",
+        remainingRequests: remainingRequests,
+      });
     } else {
       return res.status(500).json({
         status: "error",
