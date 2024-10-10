@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  handleAccept,
+  handleRequestManage,
   handleRemove,
   handleRequest,
   listRequests,
@@ -9,7 +9,7 @@ const {
 require("dotenv").config();
 
 router.post("/request", handleRequest);
-router.post("/accept/:id", handleAccept);
+router.post("/:type/:id", handleRequestManage);
 router.post("/remove/", handleRemove);
 
 router.get("/request", listRequests);
