@@ -67,6 +67,16 @@ async function student_profile(req, res) {
       where: { followerId: req.user.sr_no, followingId: id },
     });
 
+    const followers = await Follow.findAll({
+      where: { followingId: id, status: 1 },
+      include: [
+        {
+          model: Student,
+          as: "follower",
+          attributes: ["name", "profile_pic"],
+        },
+      ],
+    });
     let followSs = "nofollow";
     if (followS) {
       followSs = followS.status ? "follow" : "requested";
@@ -78,6 +88,8 @@ async function student_profile(req, res) {
       follow: followSs, // Set follow to true if the user follows the student
       self: parseInt(req.user.sr_no) === parseInt(id),
       verified: student.mobile && student.email ? true : false,
+      followCount: followers.length,
+      followers: followers,
     };
 
     // Return the response with follow status
