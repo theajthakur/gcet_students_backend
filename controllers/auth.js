@@ -62,6 +62,7 @@ async function checkLogin(req, res) {
     return res.json({
       status: "success",
       message: `${user.name} is verified!`,
+      user,
     });
   });
 }
