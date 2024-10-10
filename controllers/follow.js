@@ -49,7 +49,16 @@ async function handleRequest(req, res) {
   }
 }
 
-async function handleAccept(req, res) {}
+async function handleAccept(req, res) {
+  const reqId = parseInt(req.params.id);
+  const user = req.user;
+  const followRequest = await Follow.findOne({
+    where: { id: reqId, followerId: user.sr_no, status: 0 },
+  });
+  if (!followRequest) return res.json({ error: "No such request Exists!" });
+  await Follow.update({ status: 1 }, { where: { id: reqId } });
+  res.json({ status: "succes", message: "Request Accepted Successfully!" });
+}
 async function handleRemove(req, res) {
   const user = req.user;
   const follower = user.sr_no;
