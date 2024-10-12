@@ -11,7 +11,9 @@ function authenticateToken(req, res, next) {
   )
     return next();
 
-  const token = req.header("Authorization");
+  const token = req.header("Authorization")
+    ? req.header("Authorization")
+    : req.query.token;
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, SECRET_KEY, (err, user) => {

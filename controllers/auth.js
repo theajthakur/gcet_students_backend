@@ -66,4 +66,5 @@ async function checkLogin(req, res) {
     });
   });
 }
+
 module.exports = { handleLogin, checkLogin };
