@@ -21,7 +21,7 @@ async function showProfile(req, res) {
   try {
     const user = req.user;
     const profile = await Students.findOne({ where: { sr_no: user.sr_no } });
-    res.json(profile);
+    return res.status(200).json(profile);
   } catch (error) {
     res.json({ error: error });
   }
