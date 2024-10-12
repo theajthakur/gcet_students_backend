@@ -8,19 +8,15 @@ const auth = require("./middlewares/auth");
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Allow requests from this origin
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed methods
-    allowedHeaders: "Content-Type,Authorization", // Allowed headers
-  })
-);
-
-app.use(auth);
+app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+const staticRouter = require("./routers/static");
+app.use("/static", staticRouter);
+app.use(auth);
 
 const data_router = require("./routers/data_static");
 const auth_router = require("./routers/auth");
