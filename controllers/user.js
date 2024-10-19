@@ -38,49 +38,60 @@ const getProfilePicture = (req, res) => {
     }
   });
 };
-
 const updateProfilePicture = async (req, res) => {
   const { imageData } = req.body;
-  console.log(imageData);
   if (!imageData || !imageData.startsWith("data:image/")) {
     return res.status(400).json({ error: "Invalid image data." });
   }
 
   try {
-    // Extract metadata and base64 data
-    const [metadata, base64Data] = imageData.split(",");
-    const imageType = metadata.match(/:(.*?);/)[1]; // Extract image type (e.g., "image/png")
+    // Split the base64 data to remove the metadata
+    const base64Data = imageData.split(",")[1];
+    if (!base64Data) {
+      return res.status(400).json({ error: "Invalid base64 data." });
+    }
 
-    // Decode base64 data
     const buffer = Buffer.from(base64Data, "base64");
     const image = sharp(buffer);
     const { width, height } = await image.metadata();
 
-    // Check if the image is square
-    if (width !== height) {
-      return res.status(400).json({ error: "Image must be square." });
-    }
-
-    // Set the output directory and file name
+    // Define output path
     const outputDir = path.join(
       __dirname,
       "../../client/public/image/profile_pic/"
     );
-    const outputFileName = `user_${req.user.adm_no}.png`; // Use image format from metadata
+    const outputFileName = `user_${req.user.adm_no}.png`;
     const outputPath = path.join(outputDir, outputFileName);
 
-    // Resize if necessary and save the image
-    if (width > 1000 || height > 1000) {
-      await image.resize(1000, 1000).toFile(outputPath);
-    } else {
+    // Crop or upload the image
+    if (width === height) {
       await image.toFile(outputPath);
+      console.log("Image uploaded successfully!");
+    } else {
+      const length = Math.min(width, height);
+      const top = parseInt((height - length) / 2);
+      const left = parseInt((width - length) / 2);
+
+      await image
+        .extract({ width: length, height: length, left, top })
+        .toFile(outputPath);
+      console.log("Image cropped and uploaded successfully!");
+    }
+
+    // Resize if necessary
+    const resizedImage = sharp(outputPath);
+    const resizedMetadata = await resizedImage.metadata();
+
+    if (resizedMetadata.width > 1000 || resizedMetadata.height > 1000) {
+      await resizedImage.resize(1000, 1000).toFile(outputPath);
+      console.log("Image resized successfully!");
     }
 
     return res
       .status(200)
       .json({ message: "Profile picture uploaded successfully." });
   } catch (error) {
-    console.error("Error processing the image:", error); // Log the error
+    console.error("Error processing the image:", error);
     return res.status(500).json({ error: "Error processing the image." });
   }
 };

@@ -15,7 +15,6 @@ async function getProfilePicture(req, res) {
 
   fs.access(userImagePath, fs.constants.F_OK, (err) => {
     if (!err) {
-      console.log(userImagePath);
       return res.sendFile(userImagePath);
     } else {
       console.log(userImagePath);
