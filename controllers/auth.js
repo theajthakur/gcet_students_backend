@@ -58,7 +58,7 @@ async function checkLogin(req, res) {
     return res.status(401).json({ status: "error", message: "unauthorised" });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.json({ status: "error", message: err });
+    if (err) return res.status(404).json({ status: "error", message: err });
     return res.json({
       status: "success",
       message: `${user.name} is verified!`,
