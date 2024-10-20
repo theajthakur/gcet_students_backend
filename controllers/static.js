@@ -39,7 +39,6 @@ async function getProfilePicture(req, res) {
           .resize({ width: parseInt(w), height: parseInt(h) })
           .toBuffer()
           .then((data) => {
-            console.log("Image resized successfully"); // Add this log
             res.type("image/jpeg");
             res.send(data);
           })
