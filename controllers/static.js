@@ -1,7 +1,9 @@
 const path = require("path");
 const fs = require("fs");
+const sharp = require("sharp");
 
 async function getProfilePicture(req, res) {
+  const { w, h } = req.query;
   const adm_no = req.params.adm_no;
   const userImagePath = path.join(
     __dirname,
@@ -15,10 +17,39 @@ async function getProfilePicture(req, res) {
 
   fs.access(userImagePath, fs.constants.F_OK, (err) => {
     if (!err) {
-      return res.sendFile(userImagePath);
+      if (w && h) {
+        sharp(userImagePath)
+          .resize({ width: parseInt(w), height: parseInt(h) })
+          .toBuffer()
+          .then((data) => {
+            console.log("Image resized successfully"); // Add this log
+            res.type("image/jpeg");
+            res.send(data);
+          })
+          .catch((error) => {
+            console.error("Image processing error:", error);
+            res.status(500).send("Error processing image");
+          });
+      } else {
+        return res.sendFile(userImagePath);
+      }
     } else {
-      console.log(userImagePath);
-      return res.sendFile(defaultImagePath);
+      if (w && h) {
+        sharp(defaultImagePath)
+          .resize({ width: parseInt(w), height: parseInt(h) })
+          .toBuffer()
+          .then((data) => {
+            console.log("Image resized successfully"); // Add this log
+            res.type("image/jpeg");
+            res.send(data);
+          })
+          .catch((error) => {
+            console.error("Image processing error:", error);
+            res.status(500).send("Error processing image");
+          });
+      } else {
+        return res.sendFile(defaultImagePath);
+      }
     }
   });
 }
