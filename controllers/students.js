@@ -49,8 +49,12 @@ async function fetch_student(req, res) {
 }
 
 async function student_profile(req, res) {
-  const id = req.params.id;
-
+  let id = req.params.id;
+  if (typeof id == "string" && !/^\d+$/.test(id)) {
+    const tmpuser = await Student.findOne({ where: { adm_no: id } });
+    if (!tmpuser) return res.send("Invalid Request!");
+    id = tmpuser.sr_no;
+  }
   try {
     // Fetch the student's profile based on the provided ID
     const student = await Student.findOne({ where: { sr_no: id } });
