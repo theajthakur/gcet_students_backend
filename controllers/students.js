@@ -77,7 +77,7 @@ async function student_profile(req, res) {
         {
           model: Student,
           as: "follower",
-          attributes: ["name", "profile_pic"],
+          attributes: ["name", "profile_pic", "adm_no"],
         },
       ],
     });
