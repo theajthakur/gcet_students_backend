@@ -14,14 +14,16 @@ router.get("/profile/picture", getProfilePicture);
 router.get("/profile", showProfile);
 
 router.post("/publish/post", (req, res) => {
+  const date = new Date();
   const data = {
     user: {
       adm_no: req.user.adm_no,
+      sr_no: req.user.sr_no,
       name: req.user.name,
     },
     post: {
       id: Math.random(3) * 10000,
-      date_uploaded: "29 August",
+      date_uploaded: `${date.getDate()} October`,
       description: req.body.caption,
     },
     interaction: {
